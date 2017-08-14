@@ -13,6 +13,7 @@ COMPANY_MAPPING = {
 PEOPLE_MAPPING = {
     # theirs: ours
     'name': 'username',
-    'eye_color': 'eyeColor',
-    'food'
+    'eyeColor': 'eye_color',
+    'favouriteFood': 'food',
+    'company_id': 'company'
 }

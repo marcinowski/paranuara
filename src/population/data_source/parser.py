@@ -32,9 +32,12 @@ class ResourceParser(object):
         data = cls.fetcher.fetch()
         created, updated, errors = 0, 0, 0
         for obj in data:
-            obj_t = cls._parse_single_object(obj)
-            obj_p = cls._additional_processing(obj_t)
-            c, u, e = cls._save_object(obj_p)
+            try:
+                obj_t = cls._parse_single_object(obj)
+                obj_p = cls._additional_processing(obj_t)
+                c, u, e = cls._save_object(obj_p)
+            except cls.ParsingError:
+                c, u, e = 0, 0, 1
             created += c
             updated += u
             errors += e
@@ -63,18 +66,17 @@ class ResourceParser(object):
 
     @classmethod
     def _save_object(cls, obj):
-        created, updated, error = 0, 0, 0
         try:
-            cls.model.objects.get(index=obj.get('index', None))
+            index = obj.get('index', None)
+            cls.model.objects.get(index=index)
         except cls.model.DoesNotExist:
-            cls.model.objects.create(**obj)
-            created = 1
+            cls.model.objects.create(**obj).save()
+            return 1, 0, 0
         except cls.model.MultipleObjectsReturned:
-            error = 1
+            return 0, 0, 1
         else:
-            cls.model.update(**obj)
-            updated = 1
-        return created, updated, error
+            cls.model.objects.update(**obj)
+            return 0, 1, 0
 
 
 class CompanyParser(ResourceParser):
@@ -87,20 +89,33 @@ class PeopleParser(ResourceParser):
     fetcher = PeopleFetcher
     model = Employee
     mapping = PEOPLE_MAPPING
-    vegetables = ['beetroot']  # this should be handled better
+    vegetables = ['beetroot']  # this should be handled better, fine for now
     fruits = ['apples']
 
     @classmethod
     def _additional_processing(cls, obj):
-        pass
+        obj['company'] = cls._handle_company(obj.get('company'))
+        obj['fruits'], obj['vegetables'] = cls._handle_food(obj.pop('food'))
+        obj['friends'] = cls._handle_friends(obj['friends'])
+        return obj
 
     @classmethod
     def _handle_food(cls, food):
+        fruits, vegetables = [], []
+        for i in food:
+            if i in cls.fruits:
+                fruits.append(i)
+            elif i in cls.vegetables:
+                vegetables.append(i)
+        return fruits, vegetables
 
-
-    @classmethod
-    def _handle_company(cls, index):
+    @staticmethod
+    def _handle_company(index):
         try:
             return Company.objects.get(index=index)
-        except Company.DoesNotExist:
+        except (Company.DoesNotExist, Company.MultipleObjectsReturned):  # what would I like to do here?
             raise PeopleParser.ParsingError("Company with index {} not found!".format(index))
+
+    @staticmethod
+    def _handle_friends(friends):
+        return [p['index'] for p in friends]

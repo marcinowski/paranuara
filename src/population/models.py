@@ -14,7 +14,8 @@ class Employee(Document):
     """
     Document describing specific employee in the database.
     Notes:
-        - it uses self reference to keep the list of friends
+        # - it uses self reference to keep the list of friends
+        - friends are referenced via list of indexes (easier solution, not perfect though)
         - index field is for resource compatibility
     """
     username = StringField(required=True)
@@ -22,7 +23,7 @@ class Employee(Document):
     index = IntField()
     address = StringField()
     phone = StringField()
-    friends = ListField(ReferenceField('self'))
+    friends = ListField(IntField())
     company = ReferenceField(Company)
     eye_color = StringField()
     has_died = BooleanField()
