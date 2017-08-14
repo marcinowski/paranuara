@@ -87,15 +87,13 @@ DATABASES = {
 
 # as in https://staltz.com/djangoconfi-mongoengine
 
-SESSION_ENGINE = 'mongoengine.django.sessions'  # optional
-
 AUTHENTICATION_BACKENDS = (
     'mongoengine.django.auth.MongoEngineBackend',
 )
 
 _MONGODB_USER = 'mongouser'
 _MONGODB_PASSWD = 'password'
-_MONGODB_HOST = 'thehost'
+_MONGODB_HOST = 'localhost'
 _MONGODB_NAME = 'thedb'
 _MONGODB_DATABASE_HOST = \
     'mongodb://%s:%s@%s/%s' \
