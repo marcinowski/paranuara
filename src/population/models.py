@@ -3,18 +3,23 @@ from mongoengine import *
 
 class Company(Document):
     """
-    Document describing specific company in the database
+    Document describing specific company in the database.
+    Note: index field is for resource compatibility
     """
     name = StringField(required=True)
+    index = IntField()
 
 
 class Employee(Document):
     """
     Document describing specific employee in the database.
-    Note: It uses self reference to keep the list of friends.
+    Notes:
+        - it uses self reference to keep the list of friends
+        - index field is for resource compatibility
     """
     username = StringField(required=True)
     age = IntField()
+    index = IntField()
     address = StringField()
     phone = StringField()
     friends = ListField(ReferenceField('self'))
