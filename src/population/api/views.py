@@ -12,14 +12,14 @@ from rest_framework.response import Response
 from rest_framework_mongoengine.viewsets import ReadOnlyModelViewSet
 
 from population.api.filters import FilterBackend
-from population.api.serializers import CompanySerializer, EmployeeSerializer, EmployeeDetailSerializer,\
-    EmployeePairSerializer
+from population.api.serializers import CompanySerializer, CompanySimpleSerializer,\
+    EmployeeSerializer, EmployeeDetailSerializer, EmployeePairSerializer
 from population.models import Company, Employee
 
 
 class CompanyViewSet(ReadOnlyModelViewSet):
     queryset = Company.objects.all()
-    serializer_class = CompanySerializer
+    serializer_class = CompanySimpleSerializer
     filter_backends = (FilterBackend, )
     pagination_class = PageNumberPagination
     filter_fields = ('__all__', )
@@ -32,6 +32,7 @@ class CompanyViewSet(ReadOnlyModelViewSet):
             Given a company, the API needs to return all their employees.
             Provide the appropriate solution if the company does not have any employees.\
         """
+        self.serializer_class = CompanySerializer
         return super().retrieve(request, *args, **kwargs)
 
 
