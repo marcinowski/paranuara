@@ -101,6 +101,8 @@ _MONGODB_DATABASE_HOST = \
 
 mongoengine.connect(_MONGODB_NAME, host=_MONGODB_DATABASE_HOST)
 
+TEST_RUNNER = 'paranuara.tests.NoSQLTestRunner'
+
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 

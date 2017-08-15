@@ -12,6 +12,10 @@ from population.models import Company, Employee
 
 
 class CompanySerializer(DocumentSerializer):
+    """
+    General Company Serializer.
+    Note: includes all employees that work for the company.
+    """
     employees = SerializerMethodField()
 
     class Meta:
@@ -19,6 +23,12 @@ class CompanySerializer(DocumentSerializer):
         fields = '__all__'
 
     def get_employees(self, obj):
+        """
+        Method handling `employees` field in serialized data.
+        :param obj: Company instance
+        :return: List of all employees that work for company
+        :rtype: list
+        """
         query = Employee.objects.filter(company=obj)
         if query.count() == 0:
             return "This company has 0 employees."
@@ -26,18 +36,27 @@ class CompanySerializer(DocumentSerializer):
 
 
 class EmployeeSerializer(DocumentSerializer):
+    """
+    General Employee serializer including all fields.
+    """
     class Meta:
         model = Employee
         fields = '__all__'
 
 
 class EmployeeDetailSerializer(EmployeeSerializer):
+    """
+    Serializer for `api/employee/<index>` detail endpoint.
+    """
     class Meta:
         model = Employee
         fields = ('username', 'age', 'vegetables', 'fruits')
 
 
 class EmployeePairSerializer(EmployeeSerializer):
+    """
+    Serializer for `api/employee/pair/` endpoint.
+    """
     class Meta:
         model = Employee
         fields = ('username', 'age', 'address', 'phone')

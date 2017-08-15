@@ -68,6 +68,9 @@ class ResourceFetcher(object):
 
 
 class CompaniesFetcher(ResourceFetcher):
+    """
+    Fetcher class for companies resource.
+    """
     file = 'companies.json'
 
     @classmethod
@@ -76,6 +79,9 @@ class CompaniesFetcher(ResourceFetcher):
 
 
 class PeopleFetcher(ResourceFetcher):
+    """
+    Fetcher class for people resource.
+    """
     file = 'people.json'
 
     @classmethod

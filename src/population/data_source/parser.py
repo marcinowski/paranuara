@@ -11,6 +11,9 @@ from population.models import Company, Employee
 
 
 class ResourceParser(object):
+    """
+    Base class for parsing resources fetched data.
+    """
     fetcher = None
     model = None
     mapping = None
@@ -30,7 +33,7 @@ class ResourceParser(object):
             - return status
         """
         data = cls.fetcher.fetch()
-        created, updated, errors = 0, 0, 0
+        created, updated, errors = 0, 0, 0  # fixme: this is super weak, but holds for now
         for obj in data:
             try:
                 obj_t = cls._parse_single_object(obj)
@@ -62,10 +65,12 @@ class ResourceParser(object):
 
     @classmethod
     def _additional_processing(cls, obj):
+        """ Override this method if some additional obj parsing is needed """
         return obj
 
     @classmethod
     def _save_object(cls, obj):
+        """ Saves object including status of the operation. """
         try:
             index = obj.get('index', None)
             cls.model.objects.get(index=index)
@@ -94,6 +99,7 @@ class PeopleParser(ResourceParser):
 
     @classmethod
     def _additional_processing(cls, obj):
+        """ Additional processing for people resource """
         obj['company'] = cls._handle_company(obj.get('company', -1))
         obj['fruits'], obj['vegetables'] = cls._handle_food(obj.pop('food', []))
         obj['friends'] = cls._handle_friends(obj.get('friends', []), obj.get('index', -1))
@@ -101,6 +107,7 @@ class PeopleParser(ResourceParser):
 
     @classmethod
     def _handle_food(cls, food):
+        """ Split food between fruits and vegies """
         fruits, vegetables = [], []
         for i in food:
             if i in cls.fruits:
@@ -109,13 +116,15 @@ class PeopleParser(ResourceParser):
                 vegetables.append(i)
         return fruits, vegetables
 
-    @staticmethod
-    def _handle_company(index):
+    @classmethod
+    def _handle_company(cls, index):
+        """ Fetches company from db and returns Company instance """
         try:
             return Company.objects.get(index=index)
         except (Company.DoesNotExist, Company.MultipleObjectsReturned):  # what would I like to do here?
-            raise PeopleParser.ParsingError("Company with index {} not found!".format(index))
+            raise cls.ParsingError("Company with index {} not found!".format(index))
 
     @staticmethod
     def _handle_friends(friends, self_index):
+        """ [{'index': 1}, {'index': 2}] -> [1, 2] """
         return [p['index'] for p in friends if p['index'] != self_index]

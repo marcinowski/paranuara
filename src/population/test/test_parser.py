@@ -20,4 +20,4 @@ class TestResourceParser(TestCase):
     def test_parse_single_object(self):
         result = PeopleParser._parse_single_object(self.single_object)
         expected_keys = ['username', 'phone']
-        self.assertListEqual(list(result.keys()), expected_keys)
+        self.assertTrue(list(result.keys()) == expected_keys)

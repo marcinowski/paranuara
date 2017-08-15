@@ -6,17 +6,17 @@
 """
 
 from django.shortcuts import reverse
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import list_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from rest_framework_mongoengine.viewsets import ModelViewSet
+from rest_framework_mongoengine.viewsets import ReadOnlyModelViewSet
 
 from population.api.serializers import CompanySerializer, EmployeeSerializer, EmployeeDetailSerializer,\
     EmployeePairSerializer
 from population.models import Company, Employee
 
 
-class CompanyViewSet(ModelViewSet):
+class CompanyViewSet(ReadOnlyModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
     lookup_field = 'name'
@@ -31,7 +31,7 @@ class CompanyViewSet(ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
 
 
-class EmployeeViewSet(ModelViewSet):
+class EmployeeViewSet(ReadOnlyModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     lookup_field = 'username'
