@@ -5,18 +5,39 @@
 :contact: marcinowski007@gmail.com
 """
 
+from rest_framework.serializers import SerializerMethodField
 from rest_framework_mongoengine.serializers import EmbeddedDocumentSerializer, DocumentSerializer
 
 from population.models import Company, Employee
 
 
 class CompanySerializer(DocumentSerializer):
+    employees = SerializerMethodField()
+
     class Meta:
         model = Company
         fields = '__all__'
 
+    def get_employees(self, obj):
+        query = Employee.objects.filter(company=obj)
+        if query.count() == 0:
+            return "This company has 0 employees."
+        return EmployeeSerializer(query, many=True).data
 
-class EmployeeSerializer(EmbeddedDocumentSerializer):
+
+class EmployeeSerializer(DocumentSerializer):
     class Meta:
         model = Employee
         fields = '__all__'
+
+
+class EmployeeDetailSerializer(EmployeeSerializer):
+    class Meta:
+        model = Employee
+        fields = ('username', 'age', 'vegetables', 'fruits')
+
+
+class EmployeePairSerializer(EmployeeSerializer):
+    class Meta:
+        model = Employee
+        fields = ('username', 'age', 'address', 'phone')
