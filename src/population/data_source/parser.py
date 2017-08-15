@@ -89,14 +89,14 @@ class PeopleParser(ResourceParser):
     fetcher = PeopleFetcher
     model = Employee
     mapping = PEOPLE_MAPPING
-    vegetables = ['beetroot']  # this should be handled better, fine for now
-    fruits = ['apples']
+    vegetables = ['beetroot', 'cucumber', 'carrot', 'celery']  # this should be handled better, fine for now
+    fruits = ['banana', 'strawberry', 'apple', 'orange']
 
     @classmethod
     def _additional_processing(cls, obj):
-        obj['company'] = cls._handle_company(obj.get('company'))
-        obj['fruits'], obj['vegetables'] = cls._handle_food(obj.pop('food'))
-        obj['friends'] = cls._handle_friends(obj['friends'])
+        obj['company'] = cls._handle_company(obj.get('company', -1))
+        obj['fruits'], obj['vegetables'] = cls._handle_food(obj.pop('food', []))
+        obj['friends'] = cls._handle_friends(obj.get('friends', []), obj.get('index', -1))
         return obj
 
     @classmethod
@@ -117,5 +117,5 @@ class PeopleParser(ResourceParser):
             raise PeopleParser.ParsingError("Company with index {} not found!".format(index))
 
     @staticmethod
-    def _handle_friends(friends):
-        return [p['index'] for p in friends]
+    def _handle_friends(friends, self_index):
+        return [p['index'] for p in friends if p['index'] != self_index]

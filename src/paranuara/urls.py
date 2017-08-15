@@ -20,11 +20,11 @@ from rest_framework_mongoengine import routers
 from population.api.views import CompanyViewSet, EmployeeViewSet
 
 
-router = routers.SimpleRouter()
+router = routers.DefaultRouter()
 router.register(r'companies', CompanyViewSet)
 router.register(r'employees', EmployeeViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/', include(router.urls))
+    url(r'^api/', include(router.urls, namespace='api'))
 ]

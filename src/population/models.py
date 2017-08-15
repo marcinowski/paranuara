@@ -7,7 +7,7 @@ class Company(Document):
     Note: index field is for resource compatibility
     """
     name = StringField(required=True)
-    index = IntField()
+    index = IntField(unique=True)
 
 
 class Employee(Document):
@@ -18,9 +18,9 @@ class Employee(Document):
         - friends are referenced via list of indexes (easier solution, not perfect though)
         - index field is for resource compatibility
     """
-    username = StringField(required=True)
+    username = StringField(required=True, unique=True)  # this is an assumption, works out on provided data resource
     age = IntField()
-    index = IntField()
+    index = IntField(unique=True)
     address = StringField()
     phone = StringField()
     friends = ListField(IntField())
