@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 ##########################################################
 # Note the usage of `pwd` instead of `dirname`.          #
 # This requires the script to be run from its directory. #
