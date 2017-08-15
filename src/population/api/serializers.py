@@ -22,7 +22,7 @@ class CompanySerializer(DocumentSerializer):
         query = Employee.objects.filter(company=obj)
         if query.count() == 0:
             return "This company has 0 employees."
-        return EmployeeSerializer(query, many=True).data
+        return EmployeePairSerializer(query, many=True).data
 
 
 class EmployeeSerializer(DocumentSerializer):

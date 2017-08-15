@@ -4,6 +4,7 @@
 :author: Marcin Muszynski
 :contact: marcinowski007@gmail.com
 """
+
 from django.shortcuts import reverse
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.pagination import PageNumberPagination
@@ -20,17 +21,14 @@ class CompanyViewSet(ModelViewSet):
     serializer_class = CompanySerializer
     lookup_field = 'name'
 
-    @detail_route()
-    def employees(self, request, name):
+    def retrieve(self, request, *args, **kwargs):
         """
-        Endpoint to return all employees that work for the company.
+        Endpoint to return details about the company including all employees that work for the company.
         From specification:
             Given a company, the API needs to return all their employees.
             Provide the appropriate solution if the company does not have any employees.\
         """
-        company = self.get_object()
-        query = Employee.objects.filter(company=company)
-        return Response(EmployeeSerializer(query, many=True).data)
+        return super().retrieve(request, *args, **kwargs)
 
 
 class EmployeeViewSet(ModelViewSet):
