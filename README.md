@@ -18,11 +18,15 @@ Dear Mr President, to set up this project, please make sure for your own comfort
  - that you have installed MongoDB and `mongo`, as well as `mongod` paths are also added to PATH
  - if your computer works inside a local network behind a proxy, set appropriate `http_proxy` variables.
  - nothing is running on your port 27017 except MongoDB server
+ - you are in the directory `hivery_app` (for explanation see *Note* below)
 
 After you've made sure that you fulfill all these requirements you should simply run:
  - `. setup.sh` on Linux/Unix based environment
  - or `setup.cmd` if you're using Windows.
  
+*Note: after moving to Paranuara, I lost my Linux environment and wasn't able to put it back on such a 
+short notice. The Windows script is tested and works on my setup, however Linux is not properly tested although also should work.*
+
 These commands will:
  - verify your Python version
  - setup an virtualenv to work on

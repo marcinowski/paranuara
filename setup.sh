@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-cd `dirname "$0"`
+##########################################################
+# Note the usage of `pwd` instead of `dirname`.          #
+# This requires the script to be run from its directory. #
+##########################################################
+
 if [ "$(python -c 'import sys; print(sys.version_info[0])')" -lt 3 ]; then
     echo "Incompatible python version. Must be greater than 3."
     return 0
@@ -9,11 +13,11 @@ fi
 
 echo "Starting MongoDB server"
 # I do it before anything else, so when it's needed it's ready
-mongod --dbpath `dirname "$0"`/mongodb &
+mongod --dbpath "$(pwd)"/mongodb &
 sleep 20
 # giving db some time to initiate
 
-if [[ -e `dirname "$0"`/venv ]]; then
+if [[ -e "$(pwd)"/venv ]]; then
     echo "Virtualenv directory found."
 else
     echo "Virtualenv directory not found."
