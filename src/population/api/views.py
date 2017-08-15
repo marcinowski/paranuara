@@ -11,6 +11,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework_mongoengine.viewsets import ReadOnlyModelViewSet
 
+from population.api.filters import FilterBackend
 from population.api.serializers import CompanySerializer, EmployeeSerializer, EmployeeDetailSerializer,\
     EmployeePairSerializer
 from population.models import Company, Employee
@@ -19,6 +20,9 @@ from population.models import Company, Employee
 class CompanyViewSet(ReadOnlyModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
+    filter_backends = (FilterBackend, )
+    pagination_class = PageNumberPagination
+    filter_fields = ('__all__', )
     lookup_field = 'name'
 
     def retrieve(self, request, *args, **kwargs):
@@ -35,6 +39,8 @@ class EmployeeViewSet(ReadOnlyModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     lookup_field = 'username'
+    filter_backends = (FilterBackend, )
+    filter_fields = ('__all__', )
     pagination_class = PageNumberPagination
 
     class BadPairEndpointRequest(Exception):
