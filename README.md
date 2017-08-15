@@ -14,7 +14,7 @@ our older systems as well! Below you'll find a walk through that will guide you 
 # Chapter 1 - Set Up
 
 Dear Mr President, to set up this project, please make sure for your own comfort:
- - that you're using python 3 and path to `python` executable is added to your environmental PATH
+ - that you're using Python 3 and path to `python` and `virtualenv` executable is added to your environmental PATH
  - that you have installed MongoDB and `mongo`, as well as `mongod` paths are also added to PATH
  - if your computer works inside a local network behind a proxy, set appropriate `http_proxy` variables.
  - nothing is running on your port 27017 except MongoDB server
@@ -31,7 +31,9 @@ These commands will:
  - run `mongod` server on port 27017
  - populate the database with data provided by you
  - run simple local server for data presentation on `localhost:8000` or `127.0.0.1:8000`
- 
+
+Setup may take up to 5 minutes depending on your network connection and hardware.
+
 # Chapter 2 - Catch
 
 Application I've created is based on Django - Django Rest Framework - MongoDB setup. 

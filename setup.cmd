@@ -1,23 +1,25 @@
 @ECHO OFF
+echo Starting MongoDB server
+REM I do it before anything else so it's ready when needed
+start /B /HIGH mongod --dbpath %~dp0\mongodb
+timeout /t 20 /nobreak > nul
+REM Giving db some time to setup.
 cd %~dp0
 IF NOT EXIST %~dp0\venv (
     echo Virtualenv directory not found.
     pip install virtualenv 1> nul
     echo Setting up venv.
-    virtualenv venv 1> nul
+    virtualenv venv
 ) ELSE (
     echo Virtualenv directory found.
 )
-echo Setting up mongoDB
-REM I do it before pip install, so it initiates in the background
-mongo < mongo_setup.js
-start /b mongod --dbpath %~dp0\mongodb 1> nul
 echo Activating virtualenv.
-start venv/Scripts/activate
+call venv\Scripts\activate.bat
 echo Installing requirements.
 pip install -r requirements.txt
-cd src
+echo Setting up mongoDB
+mongo < mongo_setup.js
 echo Populating database
-python manage.py populate_db
+python src\manage.py populate_db
 echo Runserver on port 8000
-python manage.py runserver
+python src\manage.py runserver
