@@ -2,7 +2,7 @@
 
 To Mr Checktoporov, the President of Paranuara.
 
-# Prolog 
+# Prologue
 
 After 10 years of rapid development this once deserted planet has become one of the most prosperiting places of our great nation.
 The task you've hired me for was not easy, but I believe that my hard work will please your expectations. It was a great pleasure
@@ -61,4 +61,23 @@ Your second request was:
 To serve this purpose I've designed a view of a company, that you can access via
  - `/employees/pair/?ids=<index-1>,<index-2>`
 
-For example: `/employees/pair/?ids=1,2`. Index-1 and Index-2 
+For example: `/employees/pair/?ids=1,2`. Index-1 and Index-2 are indexes assigned to every employee. If you want to check
+what index is assigned to an employee, you can check by searching by his name like this:
+ - `/employees/?username=Decker Mckenzie`
+ 
+Your third request was:
+
+    `Given 1 people, provide a list of fruits and vegetables they like. 
+     This endpoint must respect this interface for the output:
+     {"username": "Ahi", "age": "30", "fruits": ["banana", "apple"], "vegetables": ["beetroot", "lettuce"]}`
+ 
+This is consumed by another endpoimt:
+
+ - `/employees/<username>`
+
+For example: `/employees/Decker%20Mckenzie/` (by the way, Decker proved himself as a great officer, he definitely deserves a raise)
+
+# Chapter 3 - The Heist
+
+I hope that this instruction above has been clear enough Mr President. In case you needed any more information about this
+fantastic project don't hesitate to contact me. Looking forward to other fascinating tasks, maybe something for the wild planet Pasablanco?
