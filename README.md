@@ -86,5 +86,41 @@ For example: `/employees/Decker%20Mckenzie/` (by the way, Decker proved himself 
 
 # Chapter 3 - The Heist
 
+```
+    - paranuara (project root)
+        |_ settings.py
+        |_ tests.py
+    - population (main application)
+        |_ models.py
+        |_ test
+        |   |_ *tests*
+        |
+        |_ api
+        |   |_ views.py
+        |   |_ serializers.py
+        |   |_ filters.py
+        |
+        |_ data_source
+        |   |_ fetchers.py
+        |   |_ parsers.py
+        |   |_ mappings.py
+        |
+        |_ management
+            |_ commands
+                |_ populate_db.py
+        
+```
+
+From the code perspective the application consists of a core `paranuara` project and `population` application. `population` 
+consists tools for reading and parsing provided resources, defines db scheme, and whole API structure. Documents schemas
+used for MongoDB are actually two models `Company` and `Employee`. They're filled with respective parsers from `data_source` that 
+can easily be triggered with `python manage.py populate_db` command. API is based on DRF adapted to MongoDB schema which defines
+filters, serializers and views. Application also has some tests that are run with help of custom TestRunner for MongoDB defined in 
+`paranuara/tests.py` but tests weren't properly developed due to the quick delivery time of the whole project.
+
+Another interesting features are `mongo_setup.js` file that acts as a initial script for db configuration.
+
+# Epilogue
+
 I hope that this instruction above has been clear enough Mr President. In case you needed any more information about this
 fantastic project don't hesitate to contact me. Looking forward to other fascinating tasks, maybe something for the wild planet Pasablanco?
