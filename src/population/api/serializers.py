@@ -11,6 +11,12 @@ from rest_framework_mongoengine.serializers import DocumentSerializer
 from population.models import Company, Employee
 
 
+class CompanySimpleSerializer(DocumentSerializer):
+    class Meta:
+        model = Company
+        fields = ('name', 'index')
+
+
 class CompanySerializer(DocumentSerializer):
     """
     General Company Serializer.
@@ -39,6 +45,8 @@ class EmployeeSerializer(DocumentSerializer):
     """
     General Employee serializer including all fields.
     """
+    company = CompanySimpleSerializer()
+
     class Meta:
         model = Employee
         fields = '__all__'
