@@ -15,13 +15,14 @@ else
     echo "Setting up venv"
     virtualenv venv
 fi
+echo "Setting up mongoDB"
+# I do it before pip install, so it initiates in the background
+mongo < mongo_setup.js
+mongod --dbpath `dirname "$0"`/mongodb &
 echo "Activating venv"
 source venv/bin/activate
 echo "Installing requirements."
 pip install -r requirements.txt
-echo "Setting up mongoDB"
-mongo < mongo_setup.js
-mongod --dbpath `dirname "$0"`/mongodb &
 cd src
 echo "Populating database"
 python manage.py populate_db
