@@ -10,7 +10,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework_mongoengine.viewsets import ModelViewSet
 
-from population.api.serializers import CompanySerializer, EmployeeSerializer, EmployeeDetailSerializer, EmployeePairSerializer
+from population.api.serializers import CompanySerializer, EmployeeSerializer, EmployeeDetailSerializer,\
+    EmployeePairSerializer
 from population.models import Company, Employee
 
 
@@ -25,15 +26,10 @@ class CompanyViewSet(ModelViewSet):
         Endpoint to return all employees that work for the company.
         From specification:
             Given a company, the API needs to return all their employees.
-            Provide the appropriate solution if the company does not have any employees.
-        :param request:
-        :param name:
-        :return:
+            Provide the appropriate solution if the company does not have any employees.\
         """
         company = self.get_object()
         query = Employee.objects.filter(company=company)
-        if query.count() == 0:
-            return Response("No one works in this company.")
         return Response(EmployeeSerializer(query, many=True).data)
 
 
@@ -42,6 +38,9 @@ class EmployeeViewSet(ModelViewSet):
     serializer_class = EmployeeSerializer
     lookup_field = 'username'
     pagination_class = PageNumberPagination
+
+    class BadPairEndpointRequest(Exception):
+        """"""
 
     def retrieve(self, request, *args, **kwargs):
         """
@@ -61,25 +60,14 @@ class EmployeeViewSet(ModelViewSet):
         From specification:
             Given 2 people, provide their information (Name, Age, Address, phone)
             and the list of their friends in common which have brown eyes and are still alive.
-        :param request:
-        :return:
         """
-        ids = request.GET.get('ids', None)
-        if not ids:
-            return Response("Please provide two ids in form of `?ids=id1,id2`.", status=400)
-        ids = list(map(int, ids.strip().split(',')))
-        if len(ids) != 2:
-            return Response("Please provide two ids in form of `?ids=id1,id2`.", status=400)
-        selected_employees = Employee.objects.filter(index__in=ids)
-        if selected_employees.count() != 2:
-            url = reverse('api:employee-list')
-            return Response(
-                "Provided ids are not valid! You can check existing employees here: {}".format(url),
-                status=400
-            )
+        try:
+            selected_employees = self._get_pair_of_employees(request)
+        except self.BadPairEndpointRequest as e:
+            return Response(str(e), 400)
         selected_employees_data = EmployeePairSerializer(selected_employees, many=True).data
         friends_list = selected_employees.values_list('friends')
-        common_friends_ids = [i for i in friends_list[0] if i in friends_list[1]]  # fixme: a bit ugly
+        common_friends_ids = [i for i in friends_list[0] if i in friends_list[1]]  # list intersection fixme: a bit ugly
         friends_query = Employee.objects.filter(index__in=common_friends_ids)
         friends_query = friends_query.filter(has_died=False).filter(eye_color="brown")
         data = {
@@ -88,3 +76,25 @@ class EmployeeViewSet(ModelViewSet):
             'common_friends': self.get_serializer(friends_query, many=True).data
         }
         return Response(data)
+
+    def _get_pair_of_employees(self, request):
+        """
+        Private method returning two employees given by `?ids=id1,id2` in request.
+        :param request:
+        :return: query
+        :rtype: QuerySet
+        :raises: self.BadPairEndpointRequest
+        """
+        ids = request.GET.get('ids', None)
+        if not ids:
+            raise self.BadPairEndpointRequest("Please provide two ids in form of `?ids=id1,id2`.")
+        ids = list(map(int, ids.strip().split(',')))
+        if len(ids) != 2:
+            raise self.BadPairEndpointRequest("Please provide two ids in form of `?ids=id1,id2`.")  # fixme: dry
+        selected_employees = Employee.objects.filter(index__in=ids)
+        if selected_employees.count() != 2:
+            url = reverse('api:employee-list')
+            raise self.BadPairEndpointRequest(
+                "Provided ids are not valid! You can check existing employees here: {}".format(url),
+            )
+        return selected_employees

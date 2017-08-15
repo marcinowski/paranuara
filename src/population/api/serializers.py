@@ -6,7 +6,7 @@
 """
 
 from rest_framework.serializers import SerializerMethodField
-from rest_framework_mongoengine.serializers import EmbeddedDocumentSerializer, DocumentSerializer
+from rest_framework_mongoengine.serializers import DocumentSerializer
 
 from population.models import Company, Employee
 
