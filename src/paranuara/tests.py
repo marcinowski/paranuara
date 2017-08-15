@@ -10,6 +10,7 @@ from django.test import TestCase
 
 
 class NoSQLTestRunner(DiscoverRunner):
+    """ https://staltz.com/djangoconfi-mongoengine/#/18 """
     def setup_databases(self):
         pass
 
