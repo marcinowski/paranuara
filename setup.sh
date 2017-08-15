@@ -2,6 +2,9 @@
 
 1. mkdir etc.
 2. virtualenv & source '' & cd src/
-3. pip install -r requirements.txt
-4. populate db
-5. run server
+pip install -r requirements.txt
+mongo < mongo_setup.js
+mongod --dbpath $pwd/mongodb
+cd src
+python manage.py populate_db
+python manage.py runserver

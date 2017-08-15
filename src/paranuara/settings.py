@@ -94,7 +94,7 @@ AUTHENTICATION_BACKENDS = (
 _MONGODB_USER = 'mongouser'
 _MONGODB_PASSWD = 'password'
 _MONGODB_HOST = 'localhost'
-_MONGODB_NAME = 'thedb'
+_MONGODB_NAME = 'paranuara'
 _MONGODB_DATABASE_HOST = \
     'mongodb://%s:%s@%s/%s' \
     % (_MONGODB_USER, _MONGODB_PASSWD, _MONGODB_HOST, _MONGODB_NAME)
