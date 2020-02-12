@@ -2,7 +2,7 @@ blinker==1.4
 certifi==2017.7.27.1
 chardet==3.0.4
 colorama==0.3.9
-Django==1.11.4
+Django==1.11.28
 django-filter==1.0.4
 django-rest-framework==0.1.0
 django-rest-framework-mongoengine==3.3.1
